@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Woffu.PruebaTecnica.Webapi
 {
-    public class Program
+    public static class Program
     {
         public static void Main(string[] args)
         {
