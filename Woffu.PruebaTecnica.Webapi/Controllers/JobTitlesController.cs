@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Woffu.PruebaTecnica.Webapi.Models;
+using Woffu.PruebaTecnica.Webapi.Repositories;
 
 namespace Woffu.PruebaTecnica.Webapi.Controllers
 {
@@ -11,31 +12,26 @@ namespace Woffu.PruebaTecnica.Webapi.Controllers
     [ApiController]
     public class JobTitlesController : Controller
     {
-        private readonly JobTitleContext _context;
+        private readonly JobTitleWebRepository _jobsWebRepository;
 
-        public JobTitlesController(JobTitleContext context)
+        public JobTitlesController(JobTitleWebRepository jobsWebRepository)
         {
-            _context = context;
-
-            if (_context.JobTitles.Count() == 0)
-            {
-                _context.JobTitles.Add(new JobTitle() { CompanyId = 1, JobTitleId = 1, Name = "Manager" });
-                _context.SaveChanges();
-            }
+            _jobsWebRepository = jobsWebRepository;
         }
 
         [HttpGet]
         public JsonResult Get()
         {
-            var joblist = _context.JobTitles.ToList();
+            var jobs = _jobsWebRepository.GetAll().Result;
 
-            return Json(joblist);
+            return Json(jobs);
         }
 
         [HttpGet("{id}")]
-        public string Get(int id)
+        public JobTitle Get(int id)
         {
-            return "value";
+            var job = _jobsWebRepository.GetById(id).Result;
+            return job;
         }
 
         [HttpPost]
