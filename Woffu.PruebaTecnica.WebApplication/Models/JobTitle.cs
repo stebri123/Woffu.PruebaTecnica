@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Woffu.PruebaTecnica.Webapi.Models
+namespace Woffu.PruebaTecnica.WebApplication.Models
 {
     public class JobTitle
     {
-        public int JobTitleId { get; set; }
-        public string Name { get; set; }
-        public int CompanyId { get; set; }
+        public int jobTitleId { get; set; }
+        public string name { get; set; }
+        public int companyId { get; set; }
     }
 }

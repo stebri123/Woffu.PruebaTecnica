@@ -35,21 +35,21 @@ namespace Woffu.PruebaTecnica.Webapi.Controllers
         }
 
         [HttpPost]
-        public void Post([FromBody]string value)
+        public void Post([FromBody] JobTitle value)
         {
-            // post method
+            _jobsWebRepository.Create(value);
         }
 
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public void Put(int id, [FromBody] JobTitle value)
         {
-            // implemente put method
+            _jobsWebRepository.Update(id, value);
         }
 
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            // delete 
+            _jobsWebRepository.DeleteById(id);
         }
     }
 }

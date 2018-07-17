@@ -5,24 +5,32 @@ using System.Net.Http;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
-using Woffu.PruebaTecnica.Webapi.Models;
+using Woffu.PruebaTecnica.WebApplication.Models;
 
 namespace Woffu.PruebaTecnica.Webapi.Repositories
 {
     public class JobTitleWebRepository
     {
-        private const string _username = "aGhrZ0JZTnhZZDBISWFMd2hwenVjRWttTHIlMmZIYkRPWjZIa21EdkZ2akdGRzFubk1nbW5BY3clM2QlM2Q6";
 
         public async Task<IEnumerable<JobTitle>> GetAll()
         {
 
             var client = GetHttpClient();
 
-            var stream = client.GetStreamAsync(@"https://woffu-test.azurewebsites.net/api/v1/jobtitles");
+            var stream = client.GetStreamAsync("http://localhost:56933/api/jobtitles");
 
             var serializer = new DataContractJsonSerializer(typeof(List<JobTitle>));
 
-            var jobTitles = serializer.ReadObject(await stream) as List<JobTitle>;
+            List<JobTitle> jobTitles;
+
+            try
+            {
+                jobTitles = serializer.ReadObject(await stream) as List<JobTitle>;
+            }
+            catch (Exception)
+            {
+                jobTitles = new List<JobTitle>();
+            }
 
             return jobTitles;
         }
@@ -31,7 +39,7 @@ namespace Woffu.PruebaTecnica.Webapi.Repositories
         {
             var client = GetHttpClient();
 
-            var stream = client.GetStreamAsync(string.Format("https://woffu-test.azurewebsites.net/api/v1/jobtitles/{0}", id));
+            var stream = client.GetStreamAsync(string.Format("http://localhost:56933/api/jobtitles/{0}", id));
 
             var serializer = new DataContractJsonSerializer(typeof(JobTitle));
 
@@ -43,43 +51,38 @@ namespace Woffu.PruebaTecnica.Webapi.Repositories
             }
             catch (Exception)
             {
-                jobTitle = new JobTitle() { CompanyId = -1, JobTitleId = -1, Name = "Not Found" };
+                jobTitle = new JobTitle() { companyId = -1, jobTitleId = -1, name = "Not Found" };
             }
 
             return jobTitle;
         }
 
-        // DELETE
         public void DeleteById(int id)
         {
             var client = GetHttpClient();
 
-            var response = client.DeleteAsync(string.Format("https://woffu-test.azurewebsites.net/api/v1/jobtitles/{0}", id)).Result;
+            var response = client.DeleteAsync(string.Format("http://localhost:56933/api/jobtitles/{0}", id)).Result;
 
 
         }
 
-        // POST
         public void Create(JobTitle jobTitle)
         {
             var client = GetHttpClient();
 
-            var response = client.PostAsJsonAsync("https://woffu-test.azurewebsites.net/api/v1/jobtitles", new { Name = jobTitle.Name}).Result;
+            var response = client.PostAsJsonAsync("http://localhost:56933/api/jobtitles", jobTitle).Result;
         }
 
-        // PUT
         public void Update(int id, JobTitle jobTitle)
         {
             var client = GetHttpClient();
 
-            var response = client.PutAsJsonAsync(string.Format("https://woffu-test.azurewebsites.net/api/v1/jobtitles/{0}", id), new { Name = jobTitle.Name}).Result;
+            var response = client.PutAsJsonAsync(string.Format("http://localhost:56933/api/jobtitles/{0}", id), jobTitle).Result;
         }
 
         private HttpClient GetHttpClient()
         {
             var client = new HttpClient();
-
-            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", _username);
 
             return client;
         }
