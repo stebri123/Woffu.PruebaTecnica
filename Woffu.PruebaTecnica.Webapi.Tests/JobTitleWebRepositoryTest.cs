@@ -12,7 +12,7 @@ namespace Woffu.PruebaTecnica.Webapi.Tests
         {
             var jobTitleRepository = new JobTitleWebRepository();
 
-            var jobTitles = jobTitleRepository.GetAll().Result;
+            var jobTitles = jobTitleRepository.GetAllAsync().Result;
 
             Assert.NotNull(jobTitles);
         }
@@ -22,7 +22,7 @@ namespace Woffu.PruebaTecnica.Webapi.Tests
         {
             var jobTitleRepository = new JobTitleWebRepository();
 
-            var jobTitles = jobTitleRepository.GetAll().Result;
+            var jobTitles = jobTitleRepository.GetAllAsync().Result;
 
             Assert.NotEmpty(jobTitles);
         }
