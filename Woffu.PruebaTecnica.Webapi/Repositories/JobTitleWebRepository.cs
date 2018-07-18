@@ -22,8 +22,8 @@ namespace Woffu.PruebaTecnica.Webapi.Repositories
         {
             _httpClient = new HttpClient();
             _httpClient.BaseAddress = new Uri(_baseAddress);
-            //_httpClient.DefaultRequestHeaders.Clear();
-            //_httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(@"application/json"));
+            _httpClient.DefaultRequestHeaders.Clear();
+            _httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(@"application/json"));
 
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", _username);
 
@@ -77,7 +77,7 @@ namespace Woffu.PruebaTecnica.Webapi.Repositories
                 content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
 
                 response = await _httpClient.PostAsync("api/v1/jobtitles", content);
-                
+
                 response.EnsureSuccessStatusCode();
             }
             catch
