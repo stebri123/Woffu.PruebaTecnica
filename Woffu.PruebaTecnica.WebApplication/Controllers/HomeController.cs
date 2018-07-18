@@ -54,6 +54,30 @@ namespace Woffu.PruebaTecnica.WebApplication.Controllers
             return View(job);
         }
 
+        public ActionResult Delete(int id)
+        {
+            var job = _jobsWebRepository.GetById(id).Result;
+
+            return View(job);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int id, IFormCollection collection)
+        {
+            try
+            {
+                _jobsWebRepository.DeleteById(id);
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+
         public IActionResult About()
         {
             ViewData["Message"] = "Woffu Test.";
