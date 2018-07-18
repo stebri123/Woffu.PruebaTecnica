@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -15,14 +16,14 @@ namespace Woffu.PruebaTecnica.Webapi.Repositories
         private const string _username = "aGhrZ0JZTnhZZDBISWFMd2hwenVjRWttTHIlMmZIYkRPWjZIa21EdkZ2akdGRzFubk1nbW5BY3clM2QlM2Q6";
         private const string _baseAddress = @"https://woffu-test.azurewebsites.net/";
 
-        private readonly HttpClient _httpClient;
+        private static readonly HttpClient _httpClient;
 
-        public JobTitleWebRepository()
+        static JobTitleWebRepository()
         {
             _httpClient = new HttpClient();
             _httpClient.BaseAddress = new Uri(_baseAddress);
-            _httpClient.DefaultRequestHeaders.Clear();
-            _httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(@"application/json"));
+            //_httpClient.DefaultRequestHeaders.Clear();
+            //_httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(@"application/json"));
 
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", _username);
 
@@ -63,15 +64,28 @@ namespace Woffu.PruebaTecnica.Webapi.Repositories
             return response.StatusCode;
         }
 
-        // POST
-        public async Task<Uri> CreateAsync(JobTitle jobTitle)
+        public async Task<HttpResponseMessage> CreateAsync(JobTitle jobTitle)
         {
+            HttpResponseMessage response = null;
 
-            var response = await _httpClient.PostAsJsonAsync("api/v1/jobtitles", new { Name = jobTitle.Name });
+            try
+            {
+                string message = JsonConvert.SerializeObject(jobTitle);
 
-            response.EnsureSuccessStatusCode();
+                byte[] messageBytes = System.Text.Encoding.UTF8.GetBytes(message);
+                var content = new ByteArrayContent(messageBytes);
+                content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
 
-            return response.Headers.Location;
+                response = await _httpClient.PostAsync("api/v1/jobtitles", content);
+                
+                response.EnsureSuccessStatusCode();
+            }
+            catch
+            {
+                Console.WriteLine(response?.ReasonPhrase);
+            }
+
+            return response;
         }
 
         // PUT

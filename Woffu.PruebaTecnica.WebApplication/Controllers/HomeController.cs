@@ -12,12 +12,13 @@ namespace Woffu.PruebaTecnica.WebApplication.Controllers
 {
     public class HomeController : Controller
     {
-        JobTitleWebRepository _jobsWebRepository;
+        readonly JobTitleWebRepository _jobsWebRepository;
 
         public HomeController()
         {
             _jobsWebRepository = new JobTitleWebRepository();
         }
+
         public IActionResult Index()
         {
 
@@ -37,6 +38,8 @@ namespace Woffu.PruebaTecnica.WebApplication.Controllers
         {
             try
             {
+                _jobsWebRepository.Create(new JobTitle() { name = collection["name"] });
+
                 return RedirectToAction(nameof(Index));
             }
             catch
