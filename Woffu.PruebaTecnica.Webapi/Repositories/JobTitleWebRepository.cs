@@ -88,12 +88,26 @@ namespace Woffu.PruebaTecnica.Webapi.Repositories
             return response;
         }
 
-        // PUT
         public async Task Update(int id, JobTitle jobTitle)
         {
-            var response = await _httpClient.PutAsJsonAsync(string.Format("api/v1/jobtitles/{0}", id), new { Name = jobTitle.Name });
+            HttpResponseMessage response = null;
 
-            response.EnsureSuccessStatusCode();
+            try
+            {
+                string message = JsonConvert.SerializeObject(jobTitle);
+
+                byte[] messageBytes = System.Text.Encoding.UTF8.GetBytes(message);
+                var content = new ByteArrayContent(messageBytes);
+                content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+
+                response = await _httpClient.PutAsync(string.Format("api/v1/jobtitles/{0}", id), content);
+
+                response.EnsureSuccessStatusCode();
+            }
+            catch
+            {
+                Console.WriteLine(response?.ReasonPhrase);
+            }
 
         }
 

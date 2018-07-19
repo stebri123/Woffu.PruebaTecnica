@@ -54,10 +54,34 @@ namespace Woffu.PruebaTecnica.WebApplication.Controllers
             return View(job);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(IFormCollection collection)
+        {
+            try
+            {
+                _jobsWebRepository.Update(int.Parse(collection["jobTitleId"]), new JobTitle() { name = collection["name"] });
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
         public ActionResult Delete(int id)
         {
-            var job = _jobsWebRepository.GetById(id).Result;
+            JobTitle job = null;
+            try
+            {
+                job = _jobsWebRepository.GetById(id).Result;
+            }
+            catch
+            {
+                return RedirectToAction(nameof(Index));
 
+            }
             return View(job);
         }
 
